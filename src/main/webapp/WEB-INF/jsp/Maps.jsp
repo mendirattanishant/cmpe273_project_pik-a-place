@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
    <head>
-     <title>Google Maps</title>
+     <title>Recommendation</title>
      <script type="text/javascript">
 
 function noBack()
@@ -23,6 +23,10 @@ function noBack()
          height: 100%;
        }
      </style>
+     
+     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
 <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
 <script type="text/javascript">    
 
@@ -66,6 +70,157 @@ var closest = [];
 var directionsDisplay = new google.maps.DirectionsRenderer();;
 var directionsService = new google.maps.DirectionsService();
 var map;
+
+createTwoDimensionalArray(3);
+
+var maxIndex = 0;
+
+// Our index, boundry and scroll tracking variables
+
+var imageIndexFirst = 0;
+
+var imageIndexLast = 3;
+
+var continueScroll = 0;
+
+
+
+var minIndex = 0;
+
+
+// This function creates our two dimensional array
+
+function createTwoDimensionalArray(arraySize) {
+
+    for (i = 0; i < imageData.length; ++ i)
+
+        imageData[i] = new Array(arraySize);
+
+}
+
+
+// This function preloads the thumbnail images
+
+function preloadThumbnails() {
+
+    imageObject = new Image();
+
+    for (i = 0; i < imageData.length; ++ i)
+
+        imageObject.src = imageData[i][0];
+
+}
+
+
+
+// This function changes the text of a table cell
+
+function changeCellText(cellId,myCellData){
+
+    document.getElementById(cellId).innerHTML = myCellData;
+
+}
+
+
+// This function changes the images
+
+function changeImage(ImageToChange,MyimageData){
+
+    document.getElementById(ImageToChange).setAttribute('src',MyimageData)
+
+}
+
+
+// This function changes the image alternate text
+
+function changeImageAlt(ImageToChange,imageData){
+
+    document.getElementById(ImageToChange).setAttribute('alt',imageData)
+
+}
+
+
+// This function changes the image alternate text
+
+function changeImageTitle(ImageToChange,imageData){
+
+    document.getElementById(ImageToChange).setAttribute('title',imageData)
+
+}
+
+
+// This function changes the image onmouseover
+
+function changeImageOnMouseOver(ImageToChange,imageIndex){
+
+    document.getElementById(ImageToChange).setAttribute('onmouseover','handleThumbOnMouseOver(' + imageIndex + ');')
+
+}
+
+
+// This function hanles calling on change function
+
+// for a thumbnail onmouseover event
+
+function handleThumbOnMouseOver(imageIndex){
+
+    changeImage('imageLarge',imageData[imageIndex][0]);
+
+    changeCellText('imageTitleCell',imageData[imageIndex][1]);
+
+    changeCellText('imageDescriptionCell',imageData[imageIndex][2]);
+
+    changeImageAlt('imageLarge',imageData[imageIndex][1] + ' - ' + imageData[imageIndex][2]);
+
+    changeImageTitle('imageLarge',imageData[imageIndex][1] + ' - ' + imageData[imageIndex][2]);
+
+}
+
+
+// This function handles the scrolling in both directions
+
+function scrollImages(scrollDirection) {
+
+// We need a variable for holding our working index value
+
+    var currentIndex;
+
+// Determine which direction to scroll - default is down (left)
+
+    if (scrollDirection == 'up')
+
+    {
+
+// Only do work if we are not to the last image
+
+        if (imageIndexLast != maxIndex)
+
+        {
+
+// We set the color to black for both before we begin
+
+// If we reach the end during the process we'll change the "button" color to silver
+
+            document.getElementById('scrollPreviousCell').setAttribute('style','color: Black')
+
+            document.getElementById('scrollNextCell').setAttribute('style','color: Black')
+
+// Move our tracking indexes up one
+
+            imageIndexLast = imageIndexLast + 1;
+
+            imageIndexFirst = imageIndexFirst + 1;
+
+//  Change next "button" to silver if we are at the end
+
+            if (imageIndexLast == maxIndex)
+
+            {
+
+                document.getElementById('scrollNextCell').setAttribute('style','color: Silver')
+
+            }
+            
 
 function initialize() {
 // alert("init");
