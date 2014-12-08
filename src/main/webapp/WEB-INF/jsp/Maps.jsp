@@ -221,6 +221,165 @@ function scrollImages(scrollDirection) {
 
             }
             
+            
+            
+// Changescrollbar images in a set delay sequence to give a pseudo-animated effect
+
+            currentIndex = imageIndexLast;
+
+            changeImage('scrollThumb4',imageData[currentIndex][0]);
+
+            changeImageOnMouseOver('scrollThumb4',currentIndex);
+
+            currentIndex = imageIndexLast - 1;
+
+            setTimeout("changeImage('scrollThumb3',imageData[" + currentIndex + "][0])",25);
+
+            setTimeout("changeImageOnMouseOver('scrollThumb3'," + currentIndex + ")",25);
+
+            currentIndex = imageIndexLast - 2;
+
+            setTimeout("changeImage('scrollThumb2',imageData[" + currentIndex + "][0])",50);
+
+            setTimeout("changeImageOnMouseOver('scrollThumb2'," + currentIndex + ")",50);
+
+            currentIndex = imageIndexLast - 3;
+
+            setTimeout("changeImage('scrollThumb1',imageData[" + currentIndex + "][0])",75);
+
+            setTimeout("changeImageOnMouseOver('scrollThumb1'," + currentIndex + ")",75);
+
+// Wait and check to see if user is still hovering over button
+
+// This pause gives the user a chance to move away from the button and stop scrolling
+
+            setTimeout("scrollAgain('" + scrollDirection + "')",1000);
+
+        }
+
+    }
+
+    else
+
+    {
+
+// Only do work if we are not to the first image
+
+        if (imageIndexFirst != minIndex)
+
+        {
+
+// We set the color to black for both before we begin
+
+// If we reach the end during the process we'll change the "button" color to silver
+
+            document.getElementById('scrollPreviousCell').setAttribute('style','color: Black')
+
+            document.getElementById('scrollNextCell').setAttribute('style','color: Black')
+
+// Move our tracking indexes down one
+
+            imageIndexLast = imageIndexLast - 1;
+
+            imageIndexFirst = imageIndexFirst - 1;
+
+//  Change previous "button" to silver if we are at the beginning
+
+            if (imageIndexFirst == minIndex)
+
+            {
+
+                document.getElementById('scrollPreviousCell').setAttribute('style','color: Silver')
+
+            }
+
+// Change scrollbar images in a set delay sequence to give a pseudo-animated effect
+
+            currentIndex = imageIndexFirst;
+
+            changeImage('scrollThumb1',imageData[currentIndex][0]);
+
+            changeImageOnMouseOver('scrollThumb1',currentIndex);
+
+            currentIndex = imageIndexFirst + 1;
+
+            setTimeout("changeImage('scrollThumb2',imageData[" + currentIndex + "][0])",25);
+
+            setTimeout("changeImageOnMouseOver('scrollThumb2'," + currentIndex + ")",25);
+
+            currentIndex = imageIndexFirst + 2;
+
+            setTimeout("changeImage('scrollThumb3',imageData[" + currentIndex + "][0])",50);
+
+            setTimeout("changeImageOnMouseOver('scrollThumb3'," + currentIndex + ")",50);
+
+            currentIndex = imageIndexFirst + 3;
+
+            setTimeout("changeImage('scrollThumb4',imageData[" + currentIndex + "][0])",75);
+
+            setTimeout("changeImageOnMouseOver('scrollThumb4'," + currentIndex + ")",75);
+
+// Wait and check to see if user is still hovering over button
+
+// This pause gives the user a chance to move away from the button and stop scrolling
+
+            setTimeout("scrollAgain('" + scrollDirection + "')",1000);
+
+        }
+
+    }
+
+}
+
+
+// This function determines whether or not to keep scrolling
+
+function scrollAgain(scrollDirection)
+
+{
+
+    if (continueScroll == 1)
+
+    {
+
+        scrollImages(scrollDirection);
+
+    }
+
+}
+
+
+// This function kicks off scrolling down (left)
+
+function scrollPrevious() {
+
+    continueScroll = 1;
+
+    scrollImages('down');
+
+}
+
+
+// This function kicks off scrolling up (right)
+
+function scrollNext() {
+
+    continueScroll = 1;
+
+    scrollImages('up');
+
+}
+
+
+// This function stops the scrolling action
+
+function scrollStop() {
+
+    continueScroll = 0;
+
+}
+
+
 
 function initialize() {
 // alert("init");
@@ -261,10 +420,18 @@ function initialize() {
 }
 
       function codeAddress() {
+      
+      
+       document.getElementById('pics').style.display = 'none';
+       document.getElementById('noImage').style.display = 'none'; 
+       
+
         var address = document.getElementById('address').value;
         geocoder.geocode( { 'address': address}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
+            
+            
 	    if (customerMarker) customerMarker.setMap(null);
             customerMarker = new google.maps.Marker({
                 map: map,
