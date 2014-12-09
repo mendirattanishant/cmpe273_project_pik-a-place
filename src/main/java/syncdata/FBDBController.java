@@ -147,7 +147,7 @@ public class FBDBController {
 
 				resultUserPlaces = results.get(0);
 
-				ResponseList<JSONObject> responseListUserPlaces = resultUserPlaces
+				ResponseList<JSONObject> responseListUserPlacesd = resultUserPlaces
 						.asResponseList();
 
 				UserPlaces up = null;
@@ -167,7 +167,7 @@ public class FBDBController {
 													"next")));
 							results = facebook.executeBatch(batch);
 
-							resultUserPlaces = results.get(0);
+							resultUserPladces = results.get(0);
 							responseListUserPlaces = resultUserPlaces
 									.asResponseList();
 							jsonObjectUserPlaces = resultUserPlaces
@@ -204,17 +204,148 @@ public class FBDBController {
 										.getString("after");
 							}
 						}
-						////////////////////////////////
+						int counter = 1;
+						while (after != "") {
+							// System.out.println("inside " + after + " no.");
+							batch = new BatchRequests<BatchRequest>();
+							batch.add(new BatchRequest(RequestMethod.GET,
+									"me/photos?fields=source,place&limit=100&after="
+											+ after));
+							resultsPhotos = facebook.executeBatch(batch).get(0);
+							jsonObjectPhotos = resultsPhotos.asJSONObject();
 
+							// /////////////////////
+							// //////////////
+							// /////////
+							responseListUserPhotos = facebook
+									.executeBatch(batch).get(0)
+									.asResponseList();
+							// ///////
+							// ////////////
+							// ////////////////////
+							rt = new RunThreads(counter, parentID,
+									responseListUserPhotos);
+							rt.start();
+							if (jsonObjectPhotos.has("paging")) {
+								if (jsonObjectPhotos.getJSONObject("paging")
+										.has("next")) {
+									after = jsonObjectPhotos
+											.getJSONObject("paging")
+											.getJSONObject("cursors")
+											.getString("after");
+								} else
+									after = "";
+							} else
+								after = "";
 
-//////////////////////////////////////////////////////////////////
+						}
 					}
 				}
-			} 
+			} else {
+				if (resp == "Added") {
+					java.util.Date dToday = new java.util.Date();
+					batch = new BatchRequests<BatchRequest>();
+					batch.add(new BatchRequest(RequestMethod.GET,
+							"me/friends?me/friends?since=" + uNew.lastSync
+									+ "&until=" + dToday + "&limit=1000"));
 
-///////////////////////////
+					results = facebook.executeBatch(batch);
 
-///////////////////////////////////////
+					resultUserFriends = results.get(0);
+					// resultUserPlaces = results.get(1);
+
+					ResponseList<JSONObject> responseListUserFriends = resultUserFriends
+							.asResponseList();
+					UserFriends usf = null;
+					JSONObject jsonObjectUserFriends = resultUserFriends
+							.asJSONObject();
+					while (responseListUserFriends != null) {
+						usf = new UserFriends(parentID, responseListUserFriends);
+
+						if (jsonObjectUserFriends.has("Paging")) {
+							if (jsonObjectUserFriends.getJSONObject("paging")
+									.has("next")) {
+								batch = new BatchRequests<BatchRequest>();
+								batch.add(new BatchRequest(RequestMethod.GET,
+										jsonObjectUserFriends.getJSONObject(
+												"paging").getString("next")));
+								results = facebook.executeBatch(batch);
+								System.out.println("hello: "
+										+ jsonObjectUserFriends.getJSONObject(
+												"paging").getString("next"));
+
+								resultUserFriends = results.get(0);
+								responseListUserFriends = resultUserFriends
+										.asResponseList();
+								System.out.println("hi: "
+										+ responseListUserFriends);
+								jsonObjectUserFriends = resultUserFriends
+										.asJSONObject();
+							} else
+								responseListUserFriends = null;
+						} else
+							responseListUserFriends = null;
+					}
+					// JSONObject jsonObjectUserPlaces =
+					// resultUserPlaces.asJSONObject();
+					batch = new BatchRequests<BatchRequest>();
+
+					batch.add(new BatchRequest(RequestMethod.GET,
+							"me/tagged_places?limit=1000"));
+					results = facebook.executeBatch(batch);
+
+					resultUserPlaces = results.get(0);
+
+					ResponseList<JSONObject> responseListUserPlaces = resultUserPlaces
+							.asResponseList();
+
+					UserPlaces up = null;
+
+					JSONObject jsonObjectUserPlaces = resultUserPlaces
+							.asJSONObject();
+					while (responseListUserPlaces != null) {
+						up = new UserPlaces(parentID, responseListUserPlaces);
+
+						if (jsonObjectUserPlaces.has("Paging")) {
+							if (jsonObjectUserPlaces.getJSONObject("paging")
+									.has("next")) {
+								batch = new BatchRequests<BatchRequest>();
+								batch.add(new BatchRequest(RequestMethod.GET,
+										jsonObjectUserPlaces.getJSONObject(
+												"paging").getString("next")));
+								results = facebook.executeBatch(batch);
+
+								resultUserPlaces = results.get(0);
+								responseListUserPlaces = resultUserPlaces
+										.asResponseList();
+								jsonObjectUserPlaces = resultUserPlaces
+										.asJSONObject();
+							}
+						} else
+							responseListUserPlaces = null;
+					}
+
+					// fetching user photos
+					batch = new BatchRequests<BatchRequest>();
+					batch.add(new BatchRequest(RequestMethod.GET,
+							"me/photos?fields=source,place&since="
+									+ uNew.lastSync + "&until=" + dToday
+									+ "&limit=100"));
+
+					System.out
+							.println(" data  "
+									+ "me/photos?fields=source,place&since="
+									+ uNew.lastSync + "&until=" + dToday
+									+ "&limit=100");
+					// uploading images to Dropbox
+					BatchResponse resultsPhotos = facebook.executeBatch(batch)
+							.get(0);
+					JSONObject jsonObjectPhotos = resultsPhotos.asJSONObject();
+					ResponseList<JSONObject> responseListUserPhotos = facebook
+							.executeBatch(batch).get(0).asResponseList();
+					
+					}
+				}
 			}
 
 			// DownloadFiles df = new DownloadFiles();
