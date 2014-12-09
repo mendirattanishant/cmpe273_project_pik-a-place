@@ -46,7 +46,7 @@ import facebook4j.BatchResponse;
 //- See more at: http://www.devx.com/Java/how-to-integrate-facebook-and-twitter-with-java-applications.html#sthash.cC7FG9Sm.dpuf
 
 public class FBDBController {
-	public static void SyncFBDB(String receive) throws FacebookException {
+	public static void SyncFBDB(String receive, String username) throws FacebookException {
 
 		// Setting configuration details in ConfigurationBuilder Class
 		ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
@@ -84,7 +84,7 @@ public class FBDBController {
 			// /Calling User Database Class
 			User uNew = new User();
 			// ////////////////////
-			String resp = uNew.AddUser(jsonObjectUser);
+			String resp = uNew.AddUser(jsonObjectUser,username);
 
 			parentID = jsonObjectUser.get("id").toString();
 
@@ -147,7 +147,7 @@ public class FBDBController {
 
 				resultUserPlaces = results.get(0);
 
-				ResponseList<JSONObject> responseListUserPlacesd = resultUserPlaces
+				ResponseList<JSONObject> responseListUserPlaces = resultUserPlaces
 						.asResponseList();
 
 				UserPlaces up = null;
@@ -167,7 +167,7 @@ public class FBDBController {
 													"next")));
 							results = facebook.executeBatch(batch);
 
-							resultUserPladces = results.get(0);
+							resultUserPlaces = results.get(0);
 							responseListUserPlaces = resultUserPlaces
 									.asResponseList();
 							jsonObjectUserPlaces = resultUserPlaces
@@ -343,7 +343,56 @@ public class FBDBController {
 					JSONObject jsonObjectPhotos = resultsPhotos.asJSONObject();
 					ResponseList<JSONObject> responseListUserPhotos = facebook
 							.executeBatch(batch).get(0).asResponseList();
-					
+					if (jsonObjectPhotos.has("data")) {
+						System.out.println("inside data");
+						if (jsonObjectPhotos.getJSONArray("data").length() != 0) {
+							RunThreads rt = new RunThreads(0, parentID,
+									responseListUserPhotos);
+							rt.start();
+
+							String after = "";
+							if (jsonObjectPhotos.has("paging")) {
+								if (jsonObjectPhotos.getJSONObject("paging")
+										.has("next")) {
+									after = jsonObjectPhotos
+											.getJSONObject("paging")
+											.getJSONObject("cursors")
+											.getString("after");
+								}
+							}
+							int counter = 1;
+							while (after != "") {
+								// System.out.println("inside " + after +
+								// " no.");
+								batch = new BatchRequests<BatchRequest>();
+								batch.add(new BatchRequest(RequestMethod.GET,
+										"me/photos?fields=source,place&limit=100&after="
+												+ after));
+								resultsPhotos = facebook.executeBatch(batch)
+										.get(0);
+								jsonObjectPhotos = resultsPhotos.asJSONObject();
+								responseListUserPhotos = facebook
+										.executeBatch(batch).get(0)
+										.asResponseList();
+
+								rt = new RunThreads(counter, parentID,
+										responseListUserPhotos);
+								rt.start();
+								if (jsonObjectPhotos.has("paging")) {
+									if (jsonObjectPhotos
+											.getJSONObject("paging")
+											.has("next")) {
+										after = jsonObjectPhotos
+												.getJSONObject("paging")
+												.getJSONObject("cursors")
+												.getString("after");
+									} else
+										after = "";
+								} else
+									after = "";
+
+							}
+						}
 					}
 				}
 			}
