@@ -1,19 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ page import="Database.FilteredUserPhotoPlace" %>
+        <%@ page import="java.util.List" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
    <head>
      <title>Recommendation</title>
-     <script type="text/javascript">
 
-function noBack()
-{
-	window.history.forward();
-}
-	setTimeout("noBack()", 0);
-	window.onunload=function(){null;};
-
-</script>
      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
      <meta charset="utf-8">
      <style>
@@ -70,6 +64,8 @@ var closest = [];
 var directionsDisplay = new google.maps.DirectionsRenderer();;
 var directionsService = new google.maps.DirectionsService();
 var map;
+var imageData = new Array(1000);
+
 
 createTwoDimensionalArray(3);
 
@@ -437,15 +433,69 @@ function initialize() {
                 map: map,
                 position: results[0].geometry.location
             });
-	    closest = findClosestN(results[0].geometry.location,10);
+	   /* closest = findClosestN(results[0].geometry.location,10);
             // get driving distance
             closest = closest.splice(0,3);
-            calculateDistances(results[0].geometry.location, closest,3);
-          } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-          }
-        });
-      }
+            calculateDistances(results[0].geometry.location, closest,3);*/
+        ;
+        
+        var res = String(results[0].geometry.location).split(",");
+                                res[0] = res[0].replace("(", "").trim();
+                                res[1] = res[1].replace(")", "").trim();
+                                console.log("-" + res[0] + "----" + res[1] + "-");
+                                jQuery.ajax({
+                                    type: "POST",
+                                    url: "http://localhost:8080/placePhoto",
+                                    data: JSON.stringify(results[0].geometry.location),
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    success: function(data, status, jqXHR) {
+
+                                        maxIndex = data.length;
+                                        for (var i = 0; i < data.length; i++) {
+
+                                            imageData[i][0] = "\\resources\\img\\downloadedImages\\1375341852757639\\place-" + res[0] + "-" + res[1] + "\\" + data[i]["photoId"] + ".jpg";
+                                            imageData[i][1] = "<table> <tr> <td> <b>Friend name</b>: " + data[i]["friendName"] + ", <b>At</b>: " + data[i]["name"] + "</td></tr>";
+
+                                            imageData[i][1] += "<tr><td> <b>Address</b>: " + data[i]["street"] + ", " + data[i]["city"] + ", " + data[i]["country"] + ", " + data[i]["zip"] + "</td></tr>";
+
+                                            imageData[i][2] = "<table> <tr> <td> <b>Friend name</b>: " + data[i]["friendName"] + ", <b>At</b>: " + data[i]["name"] + "</td></tr>";
+
+                                            imageData[i][2] += "<tr><td> <b>Address</b>: " + data[i]["street"] + ", " + data[i]["city"] + ", " + data[i]["country"] + ", " + data[i]["zip"] + "</td></tr>";
+
+                                            //i++;
+                                        }
+
+                                        if (maxIndex > 0) {
+                                            document.getElementById('pics').style.display = 'block';
+                                            document.getElementById('noImage').style.display = 'none';
+                                        } else {
+                                            document.getElementById('noImage').style.display = 'block';
+                                            document.getElementById('pics').style.display = 'none';
+                                        }
+
+
+
+                                    },
+
+                                    error: function(jqXHR, status, textStatus) {
+                                        // error handler
+
+                                        alert("error occured");
+
+                                    }
+
+                                });
+
+
+
+
+                            } else {
+                                alert('Error occured for the following reason: ' + status);
+                            }
+                        });
+                    }
+                    
 
 function findClosestN(pt,numberOfResults) {
    var closest = [];
@@ -474,6 +524,8 @@ function calculateDistances(pt,closest,numberOfResults) {
       avoidHighways: false,
       avoidTolls: false
     };
+    
+
   for (var i=0; i<closest.length; i++) request.destinations.push(closest[i].getPosition());
   service.getDistanceMatrix(request, function (response, status) {
     if (status != google.maps.DistanceMatrixStatus.OK) {
@@ -513,17 +565,70 @@ function getDirections(origin, destination) {
 google.maps.event.addDomListener(window, 'load', initialize);
 </script> 
    </head>
-   <body bgcolor="lightblue" background="${pageContext.request.contextPath}/resources/images/instagram-crop.jpg" style="color:black;" onload="if(event.persisted) noBack();">
-<%session.invalidate();
 
-%>
-<table border="1"><tr><td>
-     <div id="map" style="height: 500px; width:600px;"></div>
-</td><td>
-     <div id="side_bar"></div>
-</td></tr></table>
-<input id="address" type="text" value="Palo Alto, CA"></input>
-<input type="button" value="Search" onclick="codeAddress();"></input>
+            <body>
+                <table>
+                    <tr>
+                        <td>
+                            <div id="map" style="height: 500px; width:600px;"></div>
+                            <br />
+                            <input id="address" type="text" value="Palo Alto, CA"></input>
+                            <input type="button" value="Search" onclick="codeAddress();"></input>
+
+                        </td>
+                        <td>
+                            <div id="noImage" align="left" style="display:none">
+                                No Images to display
+                            </div>
+                            <div id="pics" align="left" style="display:none">
+                                <table border="0" cellspacing="0" width="1000px">
+                                    <tr>
+                                        <td align="center" colspan="6" style="padding-right: 100px; padding-left: 100px; color: white;" id="imageDescriptionCell">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" colspan="6">
+                                            <img height="500" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+border-bottom: 1px solid" width="500" id="imageLarge" alt="default" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" colspan="6" style="font-weight: bold; font-size: 18pt; color: silver;" id="imageTitleCell">
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td id="scrollPreviousCell" style="color: Silver" onmouseover="scrollPrevious();" onmouseout="scrollStop();">
+                                            &lt;&lt; Previous</td>
+                                        <td>
+                                            <img id="scrollThumb1" height="100" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(0);" />
+                                        </td>
+                                        <td>
+                                            <img id="scrollThumb2" height="100" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(1);" />
+                                        </td>
+                                        <td>
+                                            <img id="scrollThumb3" height="100" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(2);" />
+                                        </td>
+                                        <td>
+                                            <img id="scrollThumb4" height="100" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(3);" />
+                                        </td>
+                                        <td id="scrollNextCell" style="color: Black" onmouseover="scrollNext();" onmouseout="scrollStop();">
+                                            Next &gt;&gt;</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </td>
+
+
+                    </tr>
+                </table>
+
+
 <div id="info"></div>
 <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"> 
 </script> 
