@@ -131,7 +131,7 @@ public class SearchFriendsWithPlace {
 	}
 
 	
-	public void GetFriendPlaceList(String parentId, DB db) {
+		public void GetFriendPlaceList(String parentId, DB db) {
 
 		DBCollection dbcUser = db.getCollection("UserPlaces");
 
@@ -167,8 +167,17 @@ public class SearchFriendsWithPlace {
 					else
 						city = place.get("name").toString();
 
-					
-					
+					// System.out.println("it is: " + city + " " +
+					// object.get("id").toString());
+
+					if (Math.sqrt(Math.pow(this.longitude - longitude, 2)
+							+ Math.pow(this.latitude - latitude, 2)) < 10) {
+						dataFriendFiltered.add(dataFriend.get(i));
+						dataFriendNameFiltered.add(dataFriendName.get(i));
+						dataPlaceFiltered.add(place.get("id").toString());
+						dataLocationFiltered.add(new JSONObject(object));
+					}
+
 					/*
 					 * if(city.indexOf(cityName) >= 0) {
 					 * //System.out.println("he: " + place.get("id").toString()
@@ -186,5 +195,7 @@ public class SearchFriendsWithPlace {
 			}
 		}
 	}
+
+
 
 }
