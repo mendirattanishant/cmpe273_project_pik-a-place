@@ -608,74 +608,112 @@ google.maps.event.addDomListener(window, 'load', initialize);
    </head>
 
             <body>
-                <table>
-                    <tr>
-                        <td>
-                            <div id="map" style="height: 500px; width:600px;"></div>
-                            <br />
-                            <input id="address" type="text" value="Palo Alto, CA"></input>
-                            <input type="button" value="Search" onclick="codeAddress();"></input>
+<table >
+<tr>
+	<td>
+	<h1 align="left">
+	<b>Search for a Place on the Map</b>
+	</h1>
+	 <input id="address" type="text" value="Palo Alto, CA"></input>
+	<input type="button" value="Search" onclick="codeAddress();"></input>
+     <br />
+     <div id="info"></div>
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"> 
+	</script> 
+	<script type="text/javascript"> 
+	_uacct = "UA-162157-1";
+	urchinTracker();
+	</script> 
+     <div id="map" style="height: 500px; width:600px;"></div>
+</td>
+<td>
+<div id="noImage" align="left" style="display:none">
+No Images to display
+</div>
+<div id="pics" align="left" style="display:none"> 
+<table border="0"  cellspacing="0" width="900px">
+				
+				    <tr>
+				    	<td valign="top">
+						<div align="right" style="float: left;">
+						<a href="${pageContext.request.contextPath}/success"><img src="${pageContext.request.contextPath}/resources/images/back-button1.png" border="0"></a> 
+						<a href="${pageContext.request.contextPath}/Logout"><img src="${pageContext.request.contextPath}/resources/images/logout-button-blue.png" border="0"></a> 	
+						</div>
+						</td>
+				
+				        <td align="center" colspan="6" style="padding-right: 100px; padding-left: 100px; color: white;" id="imageDescriptionCell">
+				
+				        </td>
+				
+				    </tr>
+				
+				    <tr>
+				
+				        <td align="center" colspan="6" >
+				
+				            <img height="500" src="${pageContext.request.contextPath}/resources/images/loading3.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="500" id="imageLarge" alt="default" /></td>
+				
+				    </tr>
+				
+				    <tr>
+				
+				<td  align="center" colspan="6" style="font-weight: bold; font-size: 18pt; color: silver;" id="imageTitleCell">
+				
+				            </td>
+				        
+				
+				    </tr>
+				    <tr>
+				
+				        <td id="scrollPreviousCell" style="color: Silver" onmouseover="scrollPrevious();" onmouseout="scrollStop();">
+				
+				            &lt;&lt; Previous</td>
+				
+				        <td>
+				
+				            <img id="scrollThumb1" height="100" src="${pageContext.request.contextPath}/resources/images/loadingthumb.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(0);" /></td>
+				        <td>
+				
+				            <img id="scrollThumb2" height="100" src="${pageContext.request.contextPath}/resources/images/loadingthumb.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(1);" /></td>
+				       <td>
+				
+				            <img id="scrollThumb3" height="100" src="${pageContext.request.contextPath}/resources/images/loadingthumb.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(2);" /></td>
+				
+				        <td>
+				
+				            <img id="scrollThumb4" height="100" src="${pageContext.request.contextPath}/resources/images/loadingthumb.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(3);" /></td>
+				
+				        <td id="scrollNextCell" style="color: Black" onmouseover="scrollNext();" onmouseout="scrollStop();">
+				
+				            Next &gt;&gt;</td>
+				
+				    </tr>
+		
+				    
+				</table>
+</div>
+</td>
+<td valign="top">
+<div align="right" style="float: left;">
+<a href="${pageContext.request.contextPath}/success"><img src="${pageContext.request.contextPath}/resources/images/back-button1.png" border="0"></a> 
+</div>
+</td>
+<td valign="top">
+<div align="right" style="float: right;">
+<a href="${pageContext.request.contextPath}/Logout"><img src="${pageContext.request.contextPath}/resources/images/logout-button-blue.png" border="0"></a> 	
+</div>
+</td>
 
-                        </td>
-                        <td>
-                            <div id="noImage" align="left" style="display:none">
-                                No Images to display
-                            </div>
-                            <div id="pics" align="left" style="display:none">
-                                <table border="0" cellspacing="0" width="1000px">
-                                    <tr>
-                                        <td align="center" colspan="6" style="padding-right: 100px; padding-left: 100px; color: white;" id="imageDescriptionCell">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td align="center" colspan="6">
-                                            <img height="500" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
-border-bottom: 1px solid" width="500" id="imageLarge" alt="default" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td align="center" colspan="6" style="font-weight: bold; font-size: 18pt; color: silver;" id="imageTitleCell">
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-                                        <td id="scrollPreviousCell" style="color: Silver" onmouseover="scrollPrevious();" onmouseout="scrollStop();">
-                                            &lt;&lt; Previous</td>
-                                        <td>
-                                            <img id="scrollThumb1" height="100" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
-border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(0);" />
-                                        </td>
-                                        <td>
-                                            <img id="scrollThumb2" height="100" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
-border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(1);" />
-                                        </td>
-                                        <td>
-                                            <img id="scrollThumb3" height="100" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
-border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(2);" />
-                                        </td>
-                                        <td>
-                                            <img id="scrollThumb4" height="100" src="" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
-border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(3);" />
-                                        </td>
-                                        <td id="scrollNextCell" style="color: Black" onmouseover="scrollNext();" onmouseout="scrollStop();">
-                                            Next &gt;&gt;</td>
-                                    </tr>
-
-                                </table>
-                            </div>
-                        </td>
-
-
-                    </tr>
-                </table>
-
-
-<div id="info"></div>
-<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"> 
-</script> 
-<script type="text/javascript"> 
-_uacct = "UA-162157-1";
-urchinTracker();
-</script> 
+</tr></table>
    </body>
  </html>
