@@ -607,6 +607,31 @@ function calculateDistances(pt,closest,numberOfResults) {
   });
 }
 
+
+function mail() {
+	
+    	jQuery.ajax({
+        type: "POST",
+        url: "http://localhost:8080/mail",
+        data:"",
+        contentType: "application/json; charset=utf-8",
+        dataType: "text",
+        success: function (data, status, jqXHR) {
+             alert(status);
+             alert("mail send");
+  
+        },
+    
+        error: function (jqXHR, status, textStatus) {            
+             // error handler
+        	 
+             alert("error");
+             window.location.href="/Error"
+        }
+
+    });
+
+}
 function getDirections(origin, destination) {
   var request = {
       origin:origin,
