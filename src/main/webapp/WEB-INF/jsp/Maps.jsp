@@ -466,7 +466,7 @@ function getFBUserId()
         geocoder.geocode( { 'address': address}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
-            
+             map.setZoom(9);
             
             
 	    if (customerMarker) customerMarker.setMap(null);
@@ -474,6 +474,8 @@ function getFBUserId()
                 map: map,
                 position: results[0].geometry.location
             });
+ 		var marker;
+            var infowindow = new google.maps.InfoWindow();
 	    /* closest = findClosestN(results[0].geometry.location,10);
             
             closest = closest.splice(0,3);
@@ -490,7 +492,7 @@ function getFBUserId()
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data, status, jqXHR) {
-                		alert(fbID);
+                		alert("Successfully retrieved Photos");
                 	maxIndex = data.length;
                 	for(var i=0; i< data.length; i++)
                 	{
@@ -504,7 +506,24 @@ function getFBUserId()
                 		
                 		imageData[i][2] += "<tr><td> <b>Address</b>: " + data[i]["street"] + ", " + data[i]["city"] + ", " + data[i]["country"] + ", " + data[i]["zip"] + "</td></tr>";
                 		
-                		//i++;
+                		                	    var pt = new google.maps.LatLng(data[i]["latitude"],data[i]["longitude"]);
+                            //bounds.extend(pt);
+                            marker = new google.maps.Marker({         
+                                            position: pt,         
+                                            map: map,
+                			    icon: "http://maps.google.com/mapfiles/ms/icons/blue.png",
+                                            address: data[i]["name"],
+                                            title: data[i]["name"],
+                                            html: imageData[i][1]
+                                            });                              
+                            gmarkers.push(marker);
+                            google.maps.event.addListener(marker, 'click', (function(marker, i) {         return function() 
+                            {           infowindow.setContent(marker.html);
+                                        infowindow.open(map, marker);         
+                            }       
+                        })
+                        (marker, i));     
+
                 	}
                 	
                 	if(maxIndex > 0)
