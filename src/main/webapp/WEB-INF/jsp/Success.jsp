@@ -20,6 +20,25 @@
 
 <head>
     <title>Home</title>
+	<style>
+       html {
+         margin: 0;
+         padding: 0;
+         height: 100%;
+       }
+
+body
+    {
+        background:url('${pageContext.request.contextPath}/resources/images/mainbg_edit_1.jpg') no-repeat center center fixed;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        margin: 0;
+        padding: 0;
+    }
+</style> 
+
 
 
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
