@@ -66,6 +66,10 @@ public class MvCController {
 		return "Maps";
 	}
 	
+	@RequestMapping(value = "/Recommendation", method = RequestMethod.GET)
+	public String RecommendationJsp() {
+		return "Recommendation";
+	}
 	
 	
 	@RequestMapping(value = "/Logout", method = RequestMethod.GET)
