@@ -697,5 +697,25 @@ body
 
     }
 </script>
+<body>
+
+
+<table width="100%">
+<tr>
+	<td valign="top">
+		<br/>	
+		<div align="left"> 
+		<input type="image" src="${pageContext.request.contextPath}/resources/images/fb-login-button-png-736.png" style="width:200px;height:60px" onclick="fblogin();">
+		</div>
+		<br/><br/>
+		<div align="left">
+		 <a href="${pageContext.request.contextPath}/maps"><button><span><img alt="Get Place Recommendations" src="http://googlemaps.googlermania.com/google_maps_api_v3/en/Google_Maps_Marker.png" width="30" /> <span><b>Get Place Recommendations</b></span></span></button></a>
+		</div>
+		<div align="center">
+	</td>
+</tr>
+</table>
+
+</body>
 
 </html>
