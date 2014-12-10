@@ -330,6 +330,34 @@ public class SearchFriendsWithPlace {
 					else
 						fTemp.state = "";
 
+					if (tempObj.has("longitude"))
+						fTemp.longitude = tempObj.getString("longitude");
+					else
+						fTemp.longitude = "";
+
+					if (tempObj.has("latitude"))
+						fTemp.latitude = tempObj.getString("latitude");
+					else
+						fTemp.latitude = "";
+
+					if (tempObj.has("country"))
+						fTemp.country = tempObj.getString("country");
+					else
+						fTemp.country = "";
+
+					if (tempObj.has("city"))
+						fTemp.city = tempObj.getString("city");
+					else
+						fTemp.city = "";
+
+					if (dataLocationFiltered.get(i).getJSONObject("place")
+							.has("name"))
+						fTemp.name = dataLocationFiltered.get(i)
+								.getJSONObject("place").getString("name");
+					else
+						fTemp.name = "";
+
+					
 
 					filteredData.add(fTemp);
 
