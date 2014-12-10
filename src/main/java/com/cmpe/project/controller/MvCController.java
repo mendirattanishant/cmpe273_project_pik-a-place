@@ -73,4 +73,100 @@ public class MvCController {
 		httpSession.invalidate();
 		return "Logout";
 	}
+	
+	@RequestMapping(value = "/syncPhotos", method = RequestMethod.POST)
+	@ResponseBody
+	public List<String> syncPhotos(@RequestBody String data) {
+
+		DownloadFiles df = new DownloadFiles();
+		List<String> picList = null;
+		try {
+			Database.User usTemp = new Database.User();
+			String fbUserID = usTemp.getFBUserId(data.replace("=", ""));
+			httpSession.setAttribute(Constants.FB_USER_ID, fbUserID);
+			//System.out.println("fbUSerID: " + httpSession.getAttribute(Constants.FB_USER_ID)) ;
+			if(fbUserID != "")
+				picList = df.downloadFile(fbUserID);
+				
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return picList;
+
+	}
+
+	
+	@RequestMapping(value = "/fbUserId", method = RequestMethod.POST)
+	@ResponseBody
+	public String fbUserId(@RequestBody String data) throws UnknownHostException {
+		String fbUserID = "";
+		
+		Database.User usTemp = new Database.User();
+		fbUserID = usTemp.getFBUserId(httpSession.getAttribute(Constants.LOGGED_IN_USER).toString());
+	
+		
+		
+		return fbUserID;
+
+	}
+	
+	@RequestMapping(value = "/mail", method = RequestMethod.POST)
+	@ResponseBody
+	public String sendMail(@RequestBody String data) {
+		
+		
+		Gmail.Mail gmTemp = new Gmail.Mail();
+		List<FilteredUserPhotoPlace> filteredUserPhotoPlace = (List<FilteredUserPhotoPlace>)httpSession.getAttribute(Constants.FilteredUserPhotoPlace);
+		gmTemp.gmail(filteredUserPhotoPlace);
+	
+		
+		
+		return "sent";
+
+	}
+	@RequestMapping(value = "/placePhoto", method = RequestMethod.POST)
+	@ResponseBody
+	public List<FilteredUserPhotoPlace> placePhoto(@RequestBody String data) throws UnknownHostException {
+		JSONObject jsonObj = null;
+		List<FilteredUserPhotoPlace> filteredUserPhotoPlace = null;
+		try {
+			jsonObj = new JSONObject(data);
+			System.out.println(jsonObj.getString("k").toString());
+			System.out.println(jsonObj.getString("B").toString());
+			filteredUserPhotoPlace = getAllData(jsonObj.getDouble("k"),
+					jsonObj.getDouble("B"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		httpSession.setAttribute(Constants.FilteredUserPhotoPlace, filteredUserPhotoPlace);
+		return filteredUserPhotoPlace;
+
+	}
+
+	public List<FilteredUserPhotoPlace> getAllData(double latitude,
+			double longitude) throws UnknownHostException {
+		String fbUserID = "";
+		
+		Database.User usTemp = new Database.User();
+		fbUserID = usTemp.getFBUserId(httpSession.getAttribute(Constants.LOGGED_IN_USER).toString());
+	
+		
+		SearchFriendsWithPlace frdU = new SearchFriendsWithPlace();
+		String parentID = fbUserID;
+		List<FilteredUserPhotoPlace> filteredData = null;
+		try {
+			filteredData = frdU.GetFriendListNPhotos(parentID, latitude,
+					longitude);
+
+		} catch (UnknownHostException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return filteredData;
+	}
+
 }
