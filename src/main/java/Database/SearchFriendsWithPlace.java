@@ -46,7 +46,13 @@ public class SearchFriendsWithPlace {
 
 	List<JSONObject> dataLocationFiltered = new ArrayList<JSONObject>();
 
-	
+	public void DownloadAllRelatedPhotos(String parentId) throws IOException {
+
+		DownloadFiles dw = new DownloadFiles();
+		dw.downloadParticularFile(filteredData, latitude, longitude, parentId);
+
+	}
+
 
 	public List<FilteredUserPhotoPlace> GetFriendListNPhotos(String parentId,
 			double latitude, double longitude) throws UnknownHostException,
