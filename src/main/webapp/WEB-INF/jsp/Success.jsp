@@ -713,7 +713,45 @@ body
 		</div>
 		<div align="center">
 	</td>
+	<td valign="bottom">
+	<h1 align="center">
+	<b>FB Dropbox Photo Hub</b>
+	</h1>
+	<div id="picDisplay" style="display:none">
+				<table border="0" cellpadding="4" cellspacing="0" width="800px">
+				
+				    <tr>
+				
+				        <td align="center" colspan="4" style="font-weight: bold; font-size: 18pt; color: silver;" id="imageTitleCell">
+				
+				            </td>
+				
+				    </tr>
+				
+				    <tr>
+				
+				        <td align="center" colspan="6" >
+				
+				            <img height="500" src="${pageContext.request.contextPath}/resources/images/loading6.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="500" id="imageLarge" alt="default" /></td>
+				
+				    </tr>
+				
+				    <tr>
+				
+				        <td align="left" colspan="6" style="padding-right: 20px; padding-left: 20px; color: white;" id="imageDescriptionCell">
+				
+				            </td>
+				
+				    </tr>
+				</table>
+			</div>
+		</td>
+
 </tr>
+
+
 </table>
 
 </body>
