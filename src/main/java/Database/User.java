@@ -100,7 +100,52 @@ public class User {
 
 	}
 	
-	
+public String getFBUserId(String username) throws UnknownHostException
+	{
+		String fbUserId = "";
+		char[] password = "1234".toCharArray();
+
+		MongoCredential credential = MongoCredential.createMongoCRCredential(
+				"sjsuTeam16", "fbdata", password);
+		MongoClient mongoClient = new MongoClient(new ServerAddress(
+				"ds047720.mongolab.com", 47720), Arrays.asList(credential));
+		DB db = mongoClient.getDB("fbdata");
+		DBCollection dbcUser = db.getCollection("User");
+
+		if (dbcUser.equals(null)) {
+			dbcUser = db.createCollection("User", new BasicDBObject("capped",
+					true).append("size", 1048576));
+		}
+
+		BasicDBObject query = null;
+		try {
+			
+			query = new BasicDBObject("username", username);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return "Error";
+		}
+		System.out.println("username: "   + username);
+		DBCursor cursor = dbcUser.find(query);
+		boolean flag = false;
+		
+		try {
+			if (cursor.hasNext()) {
+				
+				fbUserId =  cursor.next().get("id").toString();
+			} 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+
+		}
+		System.out.println("fb: "   + fbUserId);
+		return fbUserId;
+	}
+		
 	
 
 }
