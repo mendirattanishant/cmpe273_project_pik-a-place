@@ -131,6 +131,60 @@ public class SearchFriendsWithPlace {
 	}
 
 	
+	public void GetFriendPlaceList(String parentId, DB db) {
+
+		DBCollection dbcUser = db.getCollection("UserPlaces");
+
+		BasicDBObject query = null;
+
+		for (int i = 0; i < dataFriend.size(); i++) {
+			// System.out.println(dataFriend.get(i));
+			// System.out.println("displaying " + dataFriend.get(i));
+			query = new BasicDBObject("parentId", dataFriend.get(i));
+
+			DBCursor cursor = dbcUser.find(query);
+			DBObject dbotemp = null;
+			try {
+				while (cursor.hasNext()) {
+
+					// System.out.println("hi2");
+					BasicDBObject object = (BasicDBObject) cursor.next();
+					BasicDBObject place = (BasicDBObject) object.get("place");
+					BasicDBObject location = (BasicDBObject) place
+							.get("location");
+
+					String city = "";
+					double latitude = 0.0, longitude = 0.0;
+
+					if (location.containsField("latitude"))
+						latitude = location.getDouble("latitude");
+
+					if (location.containsField("longitude"))
+						longitude = location.getDouble("longitude");
+
+					if (location.containsField("city"))
+						city = location.get("city").toString();
+					else
+						city = place.get("name").toString();
+
+					
+					
+					/*
+					 * if(city.indexOf(cityName) >= 0) {
+					 * //System.out.println("he: " + place.get("id").toString()
+					 * + " " + object.get("id").toString());
+					 * //dataUsierPlace.put
+					 * (dataFriend.get(i),object.get("id").toString());
+					 * dataFriendFiltered.add(dataFriend.get(i));
+					 * dataPlaceFiltered.add(place.get("id").toString()); }
+					 */
+
+				}
+			} finally {
+				cursor.close();
+
+			}
+		}
 	}
 
 }
