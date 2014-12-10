@@ -30,6 +30,8 @@ compile("org.springframework.boot:spring-boot-starter-web:1.1.6.RELEASE")
    compile("org.webjars:jquery:2.0.3-1")
    compile 'com.fasterxml.jackson.core:jackson-core:2.2.4'
     compile("org.springframework.data:spring-data-mongodb")
+compile("org.springframework.boot:spring-boot-starter-aop")
+	compile 'javax.mail:mail:1.4.1'
    providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
 }
 
