@@ -280,5 +280,65 @@ public class SearchFriendsWithPlace {
 			}
 		}
 	}
+	public void GetFriendPhoto(String parentId, DB db) throws JSONException {
+
+		DBCollection dbcUser = db.getCollection("UserPhotosPlaces");
+
+		BasicDBObject query = null;
+		// int counter = 0;
+		for (int i = 0; i < dataPlaceFiltered.size(); i++) {
+			// System.out.println(dataFriend.get(i));
+			// System.out.println("displaying for " + dataFriendFiltered.get(i)
+			// + "  " + dataPlaceFiltered.get(i));
+			query = new BasicDBObject("placeId", dataPlaceFiltered.get(i));
+			query.append("parentId", dataFriendFiltered.get(i));
+
+			DBCursor cursor = dbcUser.find(query);
+			DBObject dbotemp = null;
+			FilteredUserPhotoPlace fTemp = null;
+			JSONObject tempObj = null;
+			try {
+				while (cursor.hasNext()) {
+					dbotemp = cursor.next();
+					// System.out.println("pic is " +
+					// dbotemp.get("photoId").toString());
+					// dataPhotoFiltered.add(dataFriendFiltered.get(i));
+					// dataFriendPhoto.put(dataFriendFiltered.get(i),
+					// dbotemp.get("photoId").toString());
+					fTemp = new FilteredUserPhotoPlace();
+					fTemp.placeId = dataPlaceFiltered.get(i);
+					fTemp.photoId = dbotemp.get("photoId").toString()
+							.replace("[", "").replace("]", "")
+							.replace("\"", "").trim();
+					fTemp.parentId = dataFriendFiltered.get(i);
+					fTemp.friendName = dataFriendNameFiltered.get(i);
+
+					tempObj = dataLocationFiltered.get(i)
+							.getJSONObject("place").getJSONObject("location");
+					if (tempObj.has("zip"))
+						fTemp.zip = tempObj.getString("zip");
+					else
+						fTemp.zip = "";
+
+					if (tempObj.has("street"))
+						fTemp.street = tempObj.getString("street");
+					else
+						fTemp.street = "";
+
+					if (tempObj.has("state"))
+						fTemp.state = tempObj.getString("state");
+					else
+						fTemp.state = "";
+
+
+					filteredData.add(fTemp);
+
+				}
+			} finally {
+				cursor.close();
+
+			}
+		}
+	}
 
 }
