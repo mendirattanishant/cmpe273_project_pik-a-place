@@ -748,7 +748,54 @@ body
 				</table>
 			</div>
 		</td>
-
+		<td valign="bottom">
+		<div id="picSmall" style="display:none">
+		<table border="0" cellpadding="10" cellspacing="0" width="50px">
+				    <tr>
+				
+				        <td id="scrollPreviousCell" style="color: Silver" onmouseover="scrollPrevious();" onmouseout="scrollStop();">
+				
+				            &lt;&lt; Previous</td>
+				
+				</tr>
+				<tr>
+				        <td>
+				
+				            <img id="scrollThumb1" height="100" src="${pageContext.request.contextPath}/resources/images/loadingthumb.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(0);" /></td>
+				</tr>
+				<tr>
+				        <td>
+				
+				            <img id="scrollThumb2" height="100" src="${pageContext.request.contextPath}/resources/images/loadingthumb.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(1);" /></td>
+				</tr>
+				<tr>
+				        <td>
+				
+				            <img id="scrollThumb3" height="100" src="${pageContext.request.contextPath}/resources/images/loadingthumb.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(2);" /></td>
+				</tr>
+				<tr>
+				        <td>
+				
+				            <img id="scrollThumb4" height="100" src="${pageContext.request.contextPath}/resources/images/loadingthumb.gif" style="border-right: 1px solid; border-top: 1px solid; border-left: 1px solid;
+				
+				border-bottom: 1px solid" width="100" onmouseover="handleThumbOnMouseOver(3);" /></td>
+				</tr>
+				<tr>
+				        <td id="scrollNextCell" style="color: Black" onmouseover="scrollNext();" onmouseout="scrollStop();">
+				
+				            Next &gt;&gt;</td>
+				
+				    </tr>
+		
+			</table>
+			</div>
+		</td>
 </tr>
 
 
