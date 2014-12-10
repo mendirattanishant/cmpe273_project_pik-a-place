@@ -29,9 +29,25 @@ public class RunThreads implements Runnable {
 
 		//
 		
+	
+		try {
 
+			adImg.uploadFile(threadName, parentId, jsonObjectPhotos);
+
+		} catch (IOException | DbxException | JSONException e) {
+			System.out.println("Thread " + threadName + " interrupted.");
+		}
+
+		System.out.println("Thread " + threadName + " exiting.");
 		
-	}
 
+	}
+	public void start() {
+		System.out.println("Starting " + threadName);
+		if (t == null) {
+			t = new Thread(this, threadName);
+			t.start();
+		}
+	}
 	
 }
