@@ -748,16 +748,16 @@ No Images to display
 </div>
 </td>
 <td valign="top">
-<div align="right" style="float: left;">
-<a href="${pageContext.request.contextPath}/success"><img src="${pageContext.request.contextPath}/resources/images/back-button1.png" border="0"></a> 
+<div align="left" style="float: left;">
+						<a href="${pageContext.request.contextPath}/success"><img src="${pageContext.request.contextPath}/resources/images/Home1.png" border="0" width="100" height="30"></a> 
 </div>
 </td>
 <td valign="top">
 <div align="right" style="float: right;">
-<a href="${pageContext.request.contextPath}/Logout"><img src="${pageContext.request.contextPath}/resources/images/logout-button-blue.png" border="0"></a> 	
+<a href="${pageContext.request.contextPath}/Logout"><img src="${pageContext.request.contextPath}/resources/images/logout1.jpeg" border="0" width="100" height="30"></a> 	
 </div>
 </td>
-
+<a href="${pageContext.request.contextPath}/maps" onclick="mail();"><img src="${pageContext.request.contextPath}/resources/images/email.jpeg" border="0" width="60" height="60"></a>
 </tr></table>
    </body>
  </html>
