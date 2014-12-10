@@ -796,6 +796,17 @@ body
 			</table>
 			</div>
 		</td>
+		<td valign="top">
+		<div style="float: left;">
+		<%-- <a href="${pageContext.request.contextPath}/pik-a-place"><img src="${pageContext.request.contextPath}/resources/images/back-button1.png" border="0"></a> --%> 
+		</div>
+		</td>
+		<td valign="top">
+		<div style="float: right;">
+		<a href="${pageContext.request.contextPath}/Logout"><img src="${pageContext.request.contextPath}/resources/images/logout-button-blue.png" border="0"></a>
+		</div>
+		</td>
+
 </tr>
 
 
