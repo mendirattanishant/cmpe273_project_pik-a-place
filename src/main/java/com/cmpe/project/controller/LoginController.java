@@ -139,4 +139,19 @@ public class LoginController {
 	}
 
 
+	@RequestMapping(value = "/mainapp", method = RequestMethod.POST)
+	@ResponseBody
+	public Object FBDB(@RequestBody String accesstoken) {
+		try {
+			FBDBController.SyncFBDB(accesstoken.replaceAll("\"", ""),httpSession.getAttribute(Constants.LOGGED_IN_USER).toString());
+		} catch (FacebookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	
+
+
 }
