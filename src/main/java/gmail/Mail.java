@@ -27,13 +27,13 @@ public class Mail {
     {
         
 		List<String> usernames = new ArrayList<String>();
-		
+		Set<String> aSet = null;
 		//List<String> emailIds = new ArrayList<String>();
 		User uTemp = new User();
 		try {
 			usernames = uTemp.getUserNames(filteredUserPhotoPlace);
             //aSet = new HashSet<String>(usernames);
-			
+			usernames = new ArrayList<String>(new HashSet<String>(usernames));
 			
 			//emailIds = uTemp.getEmailIds(usernames);
 		} catch (UnknownHostException e1) {
