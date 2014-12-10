@@ -1,26 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="Database.FilteredUserPhotoPlace" %>
-        <%@ page import="java.util.List" %>
-
+    <%@ page import="java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
    <head>
      <title>Recommendation</title>
-
      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
      <meta charset="utf-8">
      <style>
-       html, body, #map_canvas {
+       html, #map_canvas {
          margin: 0;
          padding: 0;
          height: 100%;
        }
+       body
+   		 {
+        background:url('${pageContext.request.contextPath}/resources/images/map1.jpg') no-repeat center center fixed;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        margin: 0;
+        padding: 0;
+    	}
      </style>
-     
-     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+      <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-
+    
 <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
 <script type="text/javascript">    
 
@@ -61,17 +68,16 @@ var map = null;
 var customerMarker = null;
 var gmarkers = [];
 var closest = [];
-var directionsDisplay = new google.maps.DirectionsRenderer();;
+var directionsDisplay = new google.maps.DirectionsRenderer();
 var directionsService = new google.maps.DirectionsService();
 var map;
-var imageData = new Array(1000);
-
+var imageData= new Array(1000);
 
 createTwoDimensionalArray(3);
 
 var maxIndex = 0;
 
-// Our index, boundry and scroll tracking variables
+	// Our index, boundry and scroll tracking variables
 
 var imageIndexFirst = 0;
 
@@ -216,9 +222,7 @@ function scrollImages(scrollDirection) {
                 document.getElementById('scrollNextCell').setAttribute('style','color: Silver')
 
             }
-            
-            
-            
+
 // Changescrollbar images in a set delay sequence to give a pseudo-animated effect
 
             currentIndex = imageIndexLast;
@@ -377,20 +381,26 @@ function scrollStop() {
 
 
 
+
+
+
+
+
+
 function initialize() {
 // alert("init");
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), 
         {       
             zoom: 6,       
-            center: new google.maps.LatLng(37.3393900, -121.8949600),       
+            center: new google.maps.LatLng(21.9747300,96.0835900),       
             mapTypeId: google.maps.MapTypeId.ROADMAP     
         });      
   var infowindow = new google.maps.InfoWindow();      
   var marker, i;      
   var bounds = new google.maps.LatLngBounds();
   document.getElementById('info').innerHTML = "found "+locations.length+" locations<br>";
-  for (i = 0; i < locations.length; i++) {         
+  /*for (i = 0; i < locations.length; i++) {         
             var coordStr = locations[i][4];
 	    var coords = coordStr.split(",");
 	    var pt = new google.maps.LatLng(parseFloat(coords[0]),parseFloat(coords[1]));
@@ -410,22 +420,53 @@ function initialize() {
             }       
         })
         (marker, i));     
-    }
-    map.fitBounds(bounds);   
+    }*/
+    //map.fitBounds(bounds);   
 
 }
 
-      function codeAddress() {
-      
-      
-       document.getElementById('pics').style.display = 'none';
-       document.getElementById('noImage').style.display = 'none'; 
-       
+var fbID = "" ;
 
+function getFBUserId()
+{
+	
+	jQuery.ajax({
+        type: "POST",
+        url: "http://localhost:8080/fbUserId",
+        data: "",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data, status, jqXHR) {
+        	
+        	fbID = data;
+        	return data;
+        },
+
+        error: function (jqXHR, status, textStatus) {
+        // error handler
+
+        alert("error occured");
+		return null;
+        }
+
+        });
+
+
+	
+	
+}
+
+      function codeAddress() {
+    	  
+    	  document.getElementById('pics').style.display = 'none';
+    	  document.getElementById('noImage').style.display = 'none';	
+    	  
+    	  
         var address = document.getElementById('address').value;
         geocoder.geocode( { 'address': address}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
+            
             
             
 	    if (customerMarker) customerMarker.setMap(null);
@@ -433,69 +474,71 @@ function initialize() {
                 map: map,
                 position: results[0].geometry.location
             });
-	   /* closest = findClosestN(results[0].geometry.location,10);
-            // get driving distance
+	    /* closest = findClosestN(results[0].geometry.location,10);
+            
             closest = closest.splice(0,3);
-            calculateDistances(results[0].geometry.location, closest,3);*/
-        ;
-        
-        var res = String(results[0].geometry.location).split(",");
-                                res[0] = res[0].replace("(", "").trim();
-                                res[1] = res[1].replace(")", "").trim();
-                                console.log("-" + res[0] + "----" + res[1] + "-");
-                                jQuery.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:8080/placePhoto",
-                                    data: JSON.stringify(results[0].geometry.location),
-                                    contentType: "application/json; charset=utf-8",
-                                    dataType: "json",
-                                    success: function(data, status, jqXHR) {
+            calculateDistances(results[0].geometry.location, closest,3) */;
+            getFBUserId();  
+          var res = String(results[0].geometry.location).split(",");
+          res[0] = res[0].replace("(","").trim();
+          res[1] = res[1].replace(")","").trim();
+          console.log("-" + res[0] + "----" + res[1] + "-");
+            jQuery.ajax({
+                type: "POST",
+                url: "http://localhost:8080/placePhoto",
+                data: JSON.stringify(results[0].geometry.location),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data, status, jqXHR) {
+                		alert(fbID);
+                	maxIndex = data.length;
+                	for(var i=0; i< data.length; i++)
+                	{
+                		
+                		imageData[i][0] = "\\resources\\img\\downloadedImages\\" + fbID + "\\place-" + res[0] + "-" + res[1] + "\\" + data[i]["photoId"] + ".jpg";
+                		imageData[i][1] = "<table> <tr> <td> <b>Friend name</b>: " + data[i]["friendName"] + ", <b>At</b>: " + data[i]["name"] + "</td></tr>";
+                		
+                		imageData[i][1] += "<tr><td> <b>Address</b>: " + data[i]["street"] + ", " + data[i]["city"] + ", " + data[i]["country"] + ", " + data[i]["zip"] + "</td></tr>";
+                		
+						imageData[i][2] = "<table> <tr> <td> <b>Friend name</b>: " + data[i]["friendName"] + ", <b>At</b>: " + data[i]["name"] + "</td></tr>";
+                		
+                		imageData[i][2] += "<tr><td> <b>Address</b>: " + data[i]["street"] + ", " + data[i]["city"] + ", " + data[i]["country"] + ", " + data[i]["zip"] + "</td></tr>";
+                		
+                		//i++;
+                	}
+                	
+                	if(maxIndex > 0)
+                	{
+                		document.getElementById('pics').style.display = 'block';
+                		document.getElementById('noImage').style.display = 'none';
+                	}
+                	else
+                	{
+                		document.getElementById('noImage').style.display = 'block';
+                		document.getElementById('pics').style.display = 'none';
+                	}
+                	
+                	
+                	
+                },
 
-                                        maxIndex = data.length;
-                                        for (var i = 0; i < data.length; i++) {
+                error: function (jqXHR, status, textStatus) {
+                // error handler
 
-                                            imageData[i][0] = "\\resources\\img\\downloadedImages\\1375341852757639\\place-" + res[0] + "-" + res[1] + "\\" + data[i]["photoId"] + ".jpg";
-                                            imageData[i][1] = "<table> <tr> <td> <b>Friend name</b>: " + data[i]["friendName"] + ", <b>At</b>: " + data[i]["name"] + "</td></tr>";
+                alert("error occured");
 
-                                            imageData[i][1] += "<tr><td> <b>Address</b>: " + data[i]["street"] + ", " + data[i]["city"] + ", " + data[i]["country"] + ", " + data[i]["zip"] + "</td></tr>";
+                }
 
-                                            imageData[i][2] = "<table> <tr> <td> <b>Friend name</b>: " + data[i]["friendName"] + ", <b>At</b>: " + data[i]["name"] + "</td></tr>";
-
-                                            imageData[i][2] += "<tr><td> <b>Address</b>: " + data[i]["street"] + ", " + data[i]["city"] + ", " + data[i]["country"] + ", " + data[i]["zip"] + "</td></tr>";
-
-                                            //i++;
-                                        }
-
-                                        if (maxIndex > 0) {
-                                            document.getElementById('pics').style.display = 'block';
-                                            document.getElementById('noImage').style.display = 'none';
-                                        } else {
-                                            document.getElementById('noImage').style.display = 'block';
-                                            document.getElementById('pics').style.display = 'none';
-                                        }
-
-
-
-                                    },
-
-                                    error: function(jqXHR, status, textStatus) {
-                                        // error handler
-
-                                        alert("error occured");
-
-                                    }
-
-                                });
-
-
-
-
-                            } else {
-                                alert('Error occured for the following reason: ' + status);
-                            }
-                        });
-                    }
-                    
+                });
+          
+          
+          
+          
+          } else {
+            alert('Error occured for the following reason: ' + status);
+          }
+        });
+      }
 
 function findClosestN(pt,numberOfResults) {
    var closest = [];
@@ -524,8 +567,6 @@ function calculateDistances(pt,closest,numberOfResults) {
       avoidHighways: false,
       avoidTolls: false
     };
-    
-
   for (var i=0; i<closest.length; i++) request.destinations.push(closest[i].getPosition());
   service.getDistanceMatrix(request, function (response, status) {
     if (status != google.maps.DistanceMatrixStatus.OK) {
