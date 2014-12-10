@@ -147,5 +147,61 @@ public String getFBUserId(String username) throws UnknownHostException
 	}
 		
 	
+	
+	public List<String> getUserNames(List<FilteredUserPhotoPlace> filteredUserPhotoPlace) throws UnknownHostException
+	{
+		List<String> usernames = new ArrayList<String>();
+		
+		char[] password = "1234".toCharArray();
 
+		MongoCredential credential = MongoCredential.createMongoCRCredential(
+				"sjsuTeam16", "fbdata", password);
+		MongoClient mongoClient = new MongoClient(new ServerAddress(
+				"ds047720.mongolab.com", 47720), Arrays.asList(credential));
+		DB db = mongoClient.getDB("fbdata");
+		DBCollection dbcUser = db.getCollection("User");
+
+		if (dbcUser.equals(null)) {
+			dbcUser = db.createCollection("User", new BasicDBObject("capped",
+					true).append("size", 1048576));
+		}
+
+		BasicDBObject query = null;
+		
+		System.out.println("size : " + filteredUserPhotoPlace.size());
+		for(int i = 0; i < filteredUserPhotoPlace.size(); i++ )
+		{
+			
+			
+				try {
+					System.out.println("id : " + filteredUserPhotoPlace.get(i).parentId);
+					query = new BasicDBObject("id", filteredUserPhotoPlace.get(i).parentId);
+				} catch (Exception e) {
+		
+					e.printStackTrace();
+					
+				}
+				
+				DBCursor cursor = dbcUser.find(query);
+				boolean flag = false;
+				
+				try {
+					if (cursor.hasNext()) {
+						
+						usernames.add(cursor.next().get("username").toString().replace("[", "").replace("]", "").replace("\"", "").trim());
+					} 
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					cursor.close();
+		
+				}
+				
+
+		}
+				return usernames;
+	}
+
+	
 }
