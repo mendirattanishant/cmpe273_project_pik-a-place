@@ -135,12 +135,20 @@ public class MvCController {
 	public List<FilteredUserPhotoPlace> placePhoto(@RequestBody String data) throws UnknownHostException {
 		JSONObject jsonObj = null;
 		List<FilteredUserPhotoPlace> filteredUserPhotoPlace = null;
+		List<Double> x = new ArrayList<Double>();
 		try {
+			System.out.println("123");
 			jsonObj = new JSONObject(data);
-			System.out.println(jsonObj.getString("k").toString());
-			System.out.println(jsonObj.getString("B").toString());
-			filteredUserPhotoPlace = getAllData(jsonObj.getDouble("k"),
-					jsonObj.getDouble("B"));
+			Iterator<?> keys = jsonObj.keys();
+
+	        while( keys.hasNext() ){
+	            String key = (String)keys.next();
+	            System.out.println("key: " + jsonObj.getString(key).toString());
+	            x.add(jsonObj.getDouble(key));
+			}
+			
+			filteredUserPhotoPlace = getAllData(x.get(1),
+					x.get(0));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
